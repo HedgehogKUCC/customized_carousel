@@ -1,0 +1,47 @@
+html, body {
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+}
+
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+.banner_carousel {
+  background: #000000;
+}
+
+.banner_wrap {
+  width: 1051px;
+  height: 580px;
+  margin: 0 auto;
+}
+
+.banner_screen {
+  position: relative;
+  height: 100%;
+}
+
+.banner_screen .banner_item {
+  position: absolute;
+  opacity: 0.5;
+  transition: left 1s;
+  z-index: 1;
+  visibility: hidden;
+}
+
+.banner_screen .banner_item.active {
+  opacity: 1;
+}
+
+.banner_screen .banner_item.visibility {
+  visibility: inherit;
+}
+
+.banner_screen a {
+  display: block;
+}
