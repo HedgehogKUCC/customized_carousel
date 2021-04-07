@@ -5,7 +5,7 @@ $(function() {
   var tempBannerLeftValue = [];
   var banner_obj = {};
   var carouselCount = 0;
-  var setIntervalID = null;
+  var bannerCarousel_setIntervalID = null;
   var carousel_Milliseconds = 5000;
 
   for (var i = 0; i < bannerCount; i++) {
@@ -18,14 +18,19 @@ $(function() {
   var bannerThirdLast = bannerLeftValue[bannerCount-3];
 
   $('#banner0').addClass('active');
+  var carouselBanner_throttled = _.throttle(carouselBanner, 1000);
+  $('#bannerItem_next').on('click', carouselBanner_throttled);
 
-  tempBannerLeftValue[bannerCount-2] = { left: bannerSecondLast, visibility: 'hidden' };
-  tempBannerLeftValue[bannerCount-3] = { left: bannerThirdLast, visibility: 'inherit' };
+  tempBannerLeftValue[bannerCount-2] = { left: bannerSecondLast, visibility: 'hidden', zIndex: -1 };
+  tempBannerLeftValue[bannerCount-3] = { left: bannerThirdLast, visibility: 'inherit', zIndex: 1 };
 
-  setIntervalID = setInterval(carouselBanner, carousel_Milliseconds);
+  if( ifvisible.now() ){ bannerCarousel_setIntervalID = setInterval(carouselBanner, carousel_Milliseconds); }
+  ifvisible.blur(function() { clearInterval(bannerCarousel_setIntervalID); });
+  ifvisible.idle(function() { clearInterval(bannerCarousel_setIntervalID); });
+  ifvisible.wakeup(function() { bannerCarousel_setIntervalID = setInterval(carouselBanner, carousel_Milliseconds); });
 
-  $('#banner_screen').mouseover(function() { clearInterval(setIntervalID); });
-  $('#banner_screen').mouseout(function() { setIntervalID = setInterval(carouselBanner, carousel_Milliseconds); });
+  $('#banner_screen, #bannerItem_next').mouseover(function() { clearInterval(bannerCarousel_setIntervalID); });
+  $('#banner_screen, #bannerItem_next').mouseout(function() { bannerCarousel_setIntervalID = setInterval(carouselBanner, carousel_Milliseconds); });
 
   function carouselBanner() {
     var nextCarouselCount = ( carouselCount + 1 ) % bannerCount; // 1 ~ bannerCount-1
